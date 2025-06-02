@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pruebas Métodos HTTP</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    button { margin: 5px; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Pruebas de Métodos HTTP</h1>
+  <button onclick="sendRequest('GET')">GET</button>
+  <button onclick="sendRequest('POST')">POST</button>
+  <button onclick="sendRequest('PUT')">PUT</button>
+  <button onclick="sendRequest('PATCH')">PATCH</button>
+  <button onclick="sendRequest('DELETE')">DELETE</button>
+  <button onclick="sendRequest('HEAD')">HEAD</button>
+  <button onclick="sendRequest('OPTIONS')">OPTIONS</button>
+
+  <h2>Respuesta:</h2>
+  <pre id="response"></pre>
+
+  <script>
+    function sendRequest(method) {
+      const options = {
+        method,
+        headers: { "Content-Type": "application/json" }
+      };
+
+      if (["POST", "PUT", "PATCH"].includes(method)) {
+        options.body = JSON.stringify({
+          name: "Nuevo Usuario",
+          email: "nuevo@correo.com"
+        });
+      }
+
+      fetch('/user', options)
+        .then(async res => {
+          const text = await res.text();
+          document.getElementById('response').textContent = `Código: ${res.status}\n\n${text || "(Sin contenido)"}`;
+        })
+        .catch(err => {
+          document.getElementById('response').textContent = 'Error: ' + err;
+        });
+    }
+  </script>
+</body>
+</html>
